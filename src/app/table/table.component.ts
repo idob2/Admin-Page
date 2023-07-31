@@ -18,6 +18,8 @@ export class TableComponent implements OnInit {
   responseData: { [key: string]: ITableData[] } = {};
   headerTitles: string[] = [];
   editModeMap: { [key: string]: boolean } = {};
+  selectedContent: string = '';
+
 
   constructor(private dataService: DataService) {}
 
@@ -36,7 +38,6 @@ export class TableComponent implements OnInit {
     }
   }
 
-  selectedContent: string = '';
   displayContent(buttonNumber: number) {
     this.responseData = {};
     this.newEntity = null;
@@ -110,14 +111,20 @@ export class TableComponent implements OnInit {
 
 
   createNewEntity(): void {
-    this.newEntity = {};
-    this.headerTitles.forEach((headerTitle) => {
-      this.newEntity![headerTitle.toLowerCase()] = '';
-    });
+    if(this.selectedContent === ''){
+      alert("Can't add entity to undifined collection!");
+    }else{
+      this.newEntity = {};
+      this.headerTitles.forEach((headerTitle) => {
+        this.newEntity![headerTitle.toLowerCase()] = '';
+      });
+    }
+   
   }
 
   saveNewEntity(): void{
     console.log('Saving new entity:', this.newEntity);
+    this.dataService.postData(this.selectedContent, this.newEntity);
     this.newEntity = {};
   }
 }

@@ -15,7 +15,7 @@
     <tbody>
       <tr *ngIf="newEntity">
         <td *ngFor="let headerTitle of headerTitles">
-          <input [(ngModel)]="newEntity[headerTitle.toLowerCase()]" />
+          <input *ngIf="headerTitle.toLowerCase()!== '_id'" [(ngModel)]="newEntity[headerTitle.toLowerCase()]" />
         </td>
         <td><button (click)="saveNewEntity()">Save</button></td>
       </tr>

@@ -3,6 +3,7 @@ import axios from 'axios'; // Import Axios
 import { IChef } from '../interfaces/chef.interface';
 import { IRestaurant } from '../interfaces/restaurants.interface';
 import { IDish } from '../interfaces/dish.interface';
+import { ITableData } from '../interfaces/table.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,7 @@ export class DataService {
       image: restaurant.image,
       chef: restaurant.chef,
       dishes: restaurant.dishes,
+      ranking: restaurant.ranking
     }));
   }
 
@@ -62,6 +64,12 @@ export class DataService {
   async deleteData(collectionType: string, id: string) {
     const response = await axios.delete(
       `${this.API_BASE_URL}/${collectionType}/${id}`
+    );
+  }
+
+  async postData(collectionType: string, data: ITableData | null) {
+    const response = await axios.post(
+      `${this.API_BASE_URL}/${collectionType}`, data
     );
   }
 }

@@ -2,9 +2,10 @@
   <td *ngFor="let headerTitle of headerTitles">
     <span *ngIf="!editMode">{{ rowData[headerTitle.toLowerCase()] }}</span>
     <input
-      *ngIf="editMode"
+      *ngIf="editMode && headerTitle.toLowerCase()!== '_id'"
       [(ngModel)]="rowData[headerTitle.toLowerCase()]"
     />
+    <span *ngIf="editMode && headerTitle.toLowerCase()=== '_id'">{{ rowData[headerTitle.toLowerCase()] }}</span>
   </td>
   <td *ngIf="!editMode">
     <div *ngIf="!showConfirmation" class="options-container">

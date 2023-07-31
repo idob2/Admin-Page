@@ -4,4 +4,5 @@ export interface IRestaurant {
     image: string;
     chef: string;
     dishes: string[];
+    ranking: string;
 }
