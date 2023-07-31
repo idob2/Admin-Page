@@ -1,0 +1,21 @@
+<tr *ngIf="!deleted">
+  <td *ngFor="let headerTitle of headerTitles">
+    <span *ngIf="!editMode">{{ rowData[headerTitle.toLowerCase()] }}</span>
+    <input
+      *ngIf="editMode"
+      [(ngModel)]="rowData[headerTitle.toLowerCase()]"
+    />
+  </td>
+  <td *ngIf="!editMode">
+    <div *ngIf="!showConfirmation" class="options-container">
+      <button (click)="edit()">Edit</button>
+      <button (click)="delete()">Delete</button>
+    </div>
+    <div *ngIf="showConfirmation" class="delete-options-container">
+      <button (click)="confirmDelete()">Yes</button>
+      <button (click)="cancelDelete()">No</button>
+    </div>
+  </td>
+  <td *ngIf="editMode"><button (click)="save()">Save</button></td>
+
+</tr>

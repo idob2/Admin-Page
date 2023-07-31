@@ -1,0 +1,32 @@
+tr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  td {
+    flex: 1;
+    padding: 8px;
+    max-width: 185px;
+
+    word-wrap: break-word;
+
+  }
+  
+  .options-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap:20px;
+  }
+  span{
+    word-wrap: break-word;
+
+  }
+  
+  button {
+    margin-left: 8px;
+  }
+  :host{display: contents; }
+

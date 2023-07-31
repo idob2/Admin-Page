@@ -1,0 +1,35 @@
+<div class="page-container">
+  <div class="buttons-container">
+    <button (click)="displayContent(1)">Chefs</button>
+    <button (click)="displayContent(2)">Restaurants</button>
+    <button (click)="displayContent(3)">Dishes</button>
+    <button (click)="createNewEntity()">New Entity</button>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th *ngFor="let headerTitle of headerTitles">{{ headerTitle }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="newEntity">
+        <td *ngFor="let headerTitle of headerTitles">
+          <input [(ngModel)]="newEntity[headerTitle.toLowerCase()]" />
+        </td>
+        <td><button (click)="saveNewEntity()">Save</button></td>
+      </tr>
+
+      <ng-container *ngFor="let idValuePair of responseData | keyvalue">
+        <app-table-row
+          *ngFor="let row of idValuePair.value"
+          [rowData]="row"
+          [rowKey]="idValuePair.key"
+          [headerTitles]="headerTitles"
+          (dataSaved)="handleDataSaved($event)"
+          (dataDeleted)="handleDataDeleted($event)"
+        />
+      </ng-container>
+    </tbody>
+  </table>
+</div>
