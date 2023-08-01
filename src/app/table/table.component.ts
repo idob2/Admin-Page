@@ -4,6 +4,7 @@ import { IChef } from '../interfaces/chef.interface';
 import { ITableData } from '../interfaces/table.interface';
 import { IRestaurant } from '../interfaces/restaurants.interface';
 import { IDish } from '../interfaces/dish.interface';
+import {getErrorMessage} from '../utils/error.utils';
 
 @Component({
   selector: 'app-table',
@@ -18,7 +19,7 @@ export class TableComponent implements OnInit {
   responseData: { [key: string]: ITableData[] } = {};
   headerTitles: string[] = [];
   editModeMap: { [key: string]: boolean } = {};
-  selectedContent: string = '';
+  selectedContent: string  = '';
 
 
   constructor(private dataService: DataService) {}
@@ -33,8 +34,8 @@ export class TableComponent implements OnInit {
       this.chefs = chefsData;
       this.restaurants = restaurantsData;
       this.dishes = dishesData;
-    } catch (error: any) {
-      console.error(error.message);
+    } catch (error) {
+      console.error({message: getErrorMessage(error)});
     }
   }
 
@@ -79,12 +80,12 @@ export class TableComponent implements OnInit {
           this.selectedContent = 'dishes';
         break;
       default:
-        this.selectedContent = 'null';
+        this.selectedContent = '';
         break;
     }
   }
 
-  getValue(row: ITableData, key: string): any {
+  getValue(row: ITableData, key: string): string[] | string {
     return row[key.toLowerCase()];
   }
 
@@ -96,16 +97,16 @@ export class TableComponent implements OnInit {
   handleDataSaved(data: { data: ITableData; id: string }): void {
     try {
       this.dataService.updateData(this.selectedContent, data.id, data.data);
-    } catch (error: any) {
-      console.log(error.message);
+    } catch (error) {
+      console.error({message: getErrorMessage(error)});
     }
   }
 
   handleDataDeleted(id: { id: string }): void {
     try {
       this.dataService.deleteData(this.selectedContent, id.id);
-    } catch (error: any) {
-      console.log(error.message);
+    } catch (error) {
+      console.error({message: getErrorMessage(error)});
     }
   }
 
@@ -123,7 +124,6 @@ export class TableComponent implements OnInit {
   }
 
   saveNewEntity(): void{
-    console.log('Saving new entity:', this.newEntity);
     this.dataService.postData(this.selectedContent, this.newEntity);
     this.newEntity = {};
   }

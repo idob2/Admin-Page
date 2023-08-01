@@ -1,3 +1,3 @@
 export interface ITableData {
-    [key: string]: any;
+    [key: string]: string[] | string;
   }
