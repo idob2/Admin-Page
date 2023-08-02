@@ -18,7 +18,13 @@
     "@angular/platform-browser": "^16.1.0",
     "@angular/platform-browser-dynamic": "^16.1.0",
     "@angular/router": "^16.1.0",
+    "@cloudinary/angular-5.x": "^1.5.3",
+    "@cloudinary/ng": "^2.0.0",
+    "@cloudinary/url-gen": "^1.11.1",
     "axios": "^1.4.0",
+    "cloudinary": "^1.40.0",
+    "cloudinary-core": "^2.13.0",
+    "mongodb": "^5.7.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

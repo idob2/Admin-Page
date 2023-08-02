@@ -1,35 +1,60 @@
 <div class="page-container">
   <div class="buttons-container">
-    <button (click)="displayContent(1)">Chefs</button>
-    <button (click)="displayContent(2)">Restaurants</button>
-    <button (click)="displayContent(3)">Dishes</button>
-    <button (click)="createNewEntity()">New Entity</button>
+    <div><button (click)="displayContent('chefs')">Chefs</button></div>
+    <div>
+      <button (click)="displayContent('restaurants')">Restaurants</button>
+    </div>
+    <div>
+      <button (click)="displayContent('dishes')">Dishes</button>
+    </div>
+    <div>
+      <button (click)="createNewEntity()">New Entity</button>
+    </div>
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th *ngFor="let headerTitle of headerTitles">{{ headerTitle }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngIf="newEntity">
-        <td *ngFor="let headerTitle of headerTitles">
-          <input *ngIf="headerTitle.toLowerCase()!== '_id'" [(ngModel)]="newEntity[headerTitle.toLowerCase()]" />
-        </td>
-        <td><button (click)="saveNewEntity()">Save</button></td>
-      </tr>
 
-      <ng-container *ngFor="let idValuePair of responseData | keyvalue">
-        <app-table-row
-          *ngFor="let row of idValuePair.value"
-          [rowData]="row"
-          [rowKey]="idValuePair.key"
-          [headerTitles]="headerTitles"
-          (dataSaved)="handleDataSaved($event)"
-          (dataDeleted)="handleDataDeleted($event)"
-        />
-      </ng-container>
-    </tbody>
-  </table>
+    <h2>{{ selectedContent }}</h2>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th *ngFor="let headerTitle of headerTitles">{{ headerTitle }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="newEntity">
+          <td *ngFor="let headerTitle of headerTitles">
+            <input
+              *ngIf="
+                headerTitle.toLowerCase() !== '_id' && headerTitle !== 'image'
+              "
+              [(ngModel)]="newEntity[headerTitle.toLowerCase()]"
+            />
+            <ng-container *ngIf="headerTitle === 'image'">
+              <input type="file" (change)="onFileSelected($event)" />
+              <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" />
+            </ng-container>
+          </td>
+          <td>
+            <button class="save-button" (click)="saveNewEntity()">
+              <img src="../../assets/icons/saveIcon.png" alt="Save" />
+            </button>
+          </td>
+        </tr>
+        <ng-container *ngFor="let idValuePair of responseData | keyvalue">
+          <ng-container *ngFor="let row of idValuePair.value" ngProjectAs="tr">
+            <tr
+              appTableRow
+              [rowData]="row"
+              [rowKey]="idValuePair.key"
+              [headerTitles]="headerTitles"
+              (dataSaved)="handleDataSaved($event)"
+              (dataDeleted)="handleDataDeleted($event)"
+            ></tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
 </div>

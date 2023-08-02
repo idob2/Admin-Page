@@ -1,22 +1,22 @@
-<tr *ngIf="!deleted">
+<ng-container *ngIf="!deleted">
   <td *ngFor="let headerTitle of headerTitles">
-    <span *ngIf="!editMode">{{ rowData[headerTitle.toLowerCase()] }}</span>
-    <input
-      *ngIf="editMode && headerTitle.toLowerCase()!== '_id'"
-      [(ngModel)]="rowData[headerTitle.toLowerCase()]"
-    />
-    <span *ngIf="editMode && headerTitle.toLowerCase()=== '_id'">{{ rowData[headerTitle.toLowerCase()] }}</span>
+    <span *ngIf="!editMode || headerTitle === '_id' ">{{ rowData[headerTitle.toLowerCase()] }}</span>
+    <input *ngIf="editMode && headerTitle !== 'image' && headerTitle !== '_id'" [(ngModel)]="rowData[headerTitle.toLowerCase()]" />
+    <ng-container *ngIf="editMode && headerTitle === 'image'"> 
+        <input type="file" (change)="onFileSelected($event)" />
+        <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" style="max-width: 100px; max-height: 100px;"/>
+    </ng-container>
+
   </td>
   <td *ngIf="!editMode">
     <div *ngIf="!showConfirmation" class="options-container">
-      <button (click)="edit()">Edit</button>
-      <button (click)="delete()">Delete</button>
+      <button (click)="edit()"><img src="../../assets/icons/editIcon.png" alt="Edit"></button>
+      <button (click)="delete()"><img src="../../assets/icons/trashCanIcon.png" alt="Delete"></button>
     </div>
     <div *ngIf="showConfirmation" class="delete-options-container">
       <button (click)="confirmDelete()">Yes</button>
       <button (click)="cancelDelete()">No</button>
     </div>
   </td>
-  <td *ngIf="editMode"><button (click)="save()">Save</button></td>
-
-</tr>
+  <td *ngIf="editMode"><button (click)="save()"><img src="../../assets/icons/saveIcon.png" alt="Save"></button></td>
+</ng-container>

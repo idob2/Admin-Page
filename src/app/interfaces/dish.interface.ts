@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export interface IDish{
     _id: string;
     name: string;
@@ -5,5 +7,6 @@ export interface IDish{
     image: string;
     ingredients: string;
     tags: string;
-    restaurant: string;
+    restaurant_name: string;
+    restaurant: ObjectId;
 }

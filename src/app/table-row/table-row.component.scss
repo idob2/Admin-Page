@@ -2,13 +2,17 @@ tr {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex:1;
   }
   
   td {
     flex: 1;
-    padding: 8px;
     max-width: 185px;
-
+    max-height: 200px;
+    width: 100%;
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
     word-wrap: break-word;
 
   }
@@ -22,7 +26,13 @@ tr {
   }
   span{
     word-wrap: break-word;
-
+    max-height: 3.6em; 
+    line-height: 1.2em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
   }
 
   input{
@@ -31,6 +41,14 @@ tr {
   
   button {
     margin-left: 8px;
+    background-color: transparent;
+    border-color: transparent;
+    cursor: pointer;
+    img{
+        width: 20px;
+        height: 20px;
+        background-color: transparent;
+    }
   }
-  :host{display: contents; }
+
 
