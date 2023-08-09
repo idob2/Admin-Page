@@ -4,9 +4,11 @@ import { IChef } from '../interfaces/chef.interface';
 import { ITableData } from '../interfaces/table.interface';
 import { IRestaurant } from '../interfaces/restaurants.interface';
 import { IDish } from '../interfaces/dish.interface';
-import {getErrorMessage} from '../utils/error.utils';
+import { getErrorMessage } from '../utils/error.utils';
 import { ObjectId } from 'mongodb';
-import {uploadService} from '../service/cloudinaryService';
+import { uploadService } from '../service/cloudinaryService';
+import { Router } from '@angular/router';
+import { AuthService } from '../service/authService';
 
 @Component({
   selector: 'app-table',
@@ -21,11 +23,11 @@ export class TableComponent implements OnInit {
   responseData: { [key: string]: ITableData[] } = {};
   headerTitles: string[] = [];
   editModeMap: { [key: string]: boolean } = {};
-  selectedContent: string  = '';
+  selectedContent: string = '';
   imageUrl: string | null = null;
   selectedFile: File | null = null;
 
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService, private authService: AuthService, private router: Router) {}
 
   async ngOnInit(): Promise<void> {
     try {
@@ -37,18 +39,17 @@ export class TableComponent implements OnInit {
       this.chefs = chefsData;
       this.restaurants = restaurantsData;
       this.dishes = dishesData;
-      this.displayContent("chefs");
+      this.displayContent('chefs');
     } catch (error) {
-      console.error({message: getErrorMessage(error)});
+      console.error({ message: getErrorMessage(error) });
     }
-
   }
 
   displayContent(collection: string) {
     this.responseData = {};
     this.newEntity = null;
     switch (collection) {
-      case "chefs":
+      case 'chefs':
         this.chefs.forEach((chef) => {
           if (!this.responseData[chef._id]) {
             this.responseData[chef._id] = [];
@@ -60,29 +61,29 @@ export class TableComponent implements OnInit {
         this.headerTitles = Object.keys(this.chefs[0]);
         this.selectedContent = 'chefs';
         break;
-        case "restaurants":
-          this.restaurants.forEach((restaurant) => {
-            if (!this.responseData[restaurant._id]) {
-              this.responseData[restaurant._id] = [];
-            }
-            this.responseData[restaurant._id].push({
-              ...restaurant,
-            });
+      case 'restaurants':
+        this.restaurants.forEach((restaurant) => {
+          if (!this.responseData[restaurant._id]) {
+            this.responseData[restaurant._id] = [];
+          }
+          this.responseData[restaurant._id].push({
+            ...restaurant,
           });
-          this.headerTitles = Object.keys(this.restaurants[0]);
-          this.selectedContent = 'restaurants';
-          break;
-        case "dishes":
-          this.dishes.forEach((dishe) => {
-            if (!this.responseData[dishe._id]) {
-              this.responseData[dishe._id] = [];
-            }
-            this.responseData[dishe._id].push({
-              ...dishe,
-            });
+        });
+        this.headerTitles = Object.keys(this.restaurants[0]);
+        this.selectedContent = 'restaurants';
+        break;
+      case 'dishes':
+        this.dishes.forEach((dishe) => {
+          if (!this.responseData[dishe._id]) {
+            this.responseData[dishe._id] = [];
+          }
+          this.responseData[dishe._id].push({
+            ...dishe,
           });
-          this.headerTitles = Object.keys(this.dishes[0]);
-          this.selectedContent = 'dishes';
+        });
+        this.headerTitles = Object.keys(this.dishes[0]);
+        this.selectedContent = 'dishes';
         break;
       default:
         this.selectedContent = '';
@@ -90,60 +91,74 @@ export class TableComponent implements OnInit {
     }
   }
 
-  getValue(row: ITableData, key: string): string[] | string  | ObjectId | ObjectId[] | null{
+  getValue(
+    row: ITableData,
+    key: string
+  ): string[] | string | ObjectId | ObjectId[] | null {
     return row[key.toLowerCase()];
   }
-
 
   toggleEditMode(key: string) {
     this.editModeMap[key] = !this.editModeMap[key];
   }
 
- async handleDataSaved(data: { data: ITableData; id: string }){
+  async handleDataSaved(data: { data: ITableData; id: string }) {
     try {
-      const respone = await this.dataService.updateData(this.selectedContent, data.id, data.data);
+      const respone = await this.dataService.updateData(
+        this.selectedContent,
+        data.id,
+        data.data
+      );
     } catch (error) {
-      console.error({message: getErrorMessage(error)});
+      this.router.navigate(['/login-page']);
+      console.error({ message: getErrorMessage(error) });
     }
   }
 
-  handleDataDeleted(id: { id: string }): void {
+  async handleDataDeleted(id: { id: string }) {
     try {
-      this.dataService.deleteData(this.selectedContent, id.id);
+      await this.dataService.deleteData(this.selectedContent, id.id);
     } catch (error) {
-      console.error({message: getErrorMessage(error)});
+      this.router.navigate(['/login-page']);
+      console.error({ message: getErrorMessage(error) });
     }
   }
-
 
   createNewEntity(): void {
-    if(this.selectedContent === ''){
-      alert("Can't add entity to undifined collection!");
-    }else{
-      this.newEntity = {};
-      this.headerTitles.forEach((headerTitle) => {
-        this.newEntity![headerTitle.toLowerCase()] = '';
-      });
-      this.newEntity['dishes'] = null;
-      this.newEntity['restaurants'] = null;
-      this.newEntity['restaurant'] = null;
-      this.newEntity['chef'] = null;
-    }
-   
-  }
-
-  async saveNewEntity(){
-    if(this.selectedContent === 'dishes'){
-
-      delete this.newEntity!['restaurant_name'];
-    }
-    if (this.newEntity){
-      this.newEntity['image'] = await this.uploadImage();
-      this.dataService.postData(this.selectedContent, this.newEntity);
-      this.newEntity = {};
+    try {
+      if (this.selectedContent === '') {
+        alert("Can't add entity to undifined collection!");
+      } else {
+        this.newEntity = {};
+        this.headerTitles.forEach((headerTitle) => {
+          this.newEntity![headerTitle.toLowerCase()] = '';
+        });
+        this.newEntity['dishes'] = [];
+        this.newEntity['restaurants'] = [];
+        this.newEntity['restaurant'] = null;
+        this.newEntity['chef'] = null;
+      }
+    } catch (error) {
+      this.router.navigate(['/login-page']);
+      console.error({ message: getErrorMessage(error) });
     }
   }
 
+  async saveNewEntity() {
+    try {
+      if (this.selectedContent === 'dishes') {
+        delete this.newEntity!['restaurant_name'];
+      }
+      if (this.newEntity) {
+        this.newEntity['image'] = await this.uploadImage();
+        await this.dataService.postData(this.selectedContent, this.newEntity);
+        this.newEntity = {};
+      }
+    } catch (error) {
+      this.router.navigate(['/login-page']);
+      console.error({ message: getErrorMessage(error) });
+    }
+  }
 
   async onFileSelected(event: Event) {
     const fileInput = event.target as HTMLInputElement;
@@ -152,16 +167,20 @@ export class TableComponent implements OnInit {
     }
   }
 
-
   async uploadImage() {
     try {
-      if(this.selectedFile){
+      if (this.selectedFile) {
         const result = await uploadService.uploadImg(this.selectedFile);
         return result['secure_url'];
       }
-      return "";
+      return '';
     } catch (error) {
       console.error('Error uploading image:', error);
     }
+  }
+
+  logout(): void {
+    this.authService.deleteCookie();
+    this.router.navigate(['/login-page']);
   }
 }

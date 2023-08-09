@@ -24,7 +24,9 @@
     "axios": "^1.4.0",
     "cloudinary": "^1.40.0",
     "cloudinary-core": "^2.13.0",
+    "jsonwebtoken": "^9.0.1",
     "mongodb": "^5.7.0",
+    "ngx-cookie-service": "^16.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
