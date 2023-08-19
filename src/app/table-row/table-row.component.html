@@ -46,14 +46,7 @@
           alt="Uploaded Image"
           style="max-width: 100px; max-height: 100px"
         />
-    <!-- <img
-    class="ellipsis-clickable"
-    [ngClass]="{ expanded: isExpanded }"
-    (click)="expand()"
-    *ngIf="
-      !editMode && headerTitle === 'image'
-    "
-    /> -->
+ 
   
     <textarea
       *ngIf="
@@ -64,6 +57,7 @@
           !shouldShowMultiSelectDropdown(headerTitle)
       "
       [(ngModel)]="rowData[headerTitle.toLowerCase()]"
+      class="edit-area"
     ></textarea>
     <select *ngIf="editMode && headerTitle === 'price'" [(ngModel)]="rowData[headerTitle.toLowerCase()]" class="edit-select">
       <option *ngFor="let number of numbers" [value]="number">{{ number }}</option>

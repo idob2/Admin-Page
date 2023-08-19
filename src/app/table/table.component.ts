@@ -28,6 +28,7 @@ export class TableComponent implements OnInit {
   selectedFile: File | null = null;
   isEditing: boolean = false;
   dropdownOptions: { [headerTitle: string]: IDropdownOption[] } = {};
+  numbers: number[] = [];
 
   constructor(
     private dataService: DataService,
@@ -38,6 +39,9 @@ export class TableComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     try {
       await this.fetchAllData();
+      for (let i = 0; i <= 500; i++) {
+        this.numbers.push(i);
+      };
       this.displayContent('chefs');
     } catch (error) {
       console.error({ message: getErrorMessage(error) });
@@ -144,6 +148,8 @@ export class TableComponent implements OnInit {
   }
   createNewEntity(): void {
     try {
+      this.handleRequestDropdownOptions("");
+      this.newEntity = {};
       if (this.selectedContent === '') {
         alert("Can't add entity to undifined collection!");
       } else {
@@ -174,6 +180,7 @@ export class TableComponent implements OnInit {
       }
       await this.fetchAllData();
       this.displayContent(this.selectedContent);
+      this.imageUrl = null;
     } catch (error) {
       if(getErrorMessage(error) === 'Invalid token'){
         this.router.navigate(['/login-page']);
@@ -181,6 +188,10 @@ export class TableComponent implements OnInit {
       alert('Fill the fields  correctly!');
       console.error({ message: getErrorMessage(error) });
     }
+  }
+
+  cancelEntity(){
+    this.newEntity = null;
   }
 
   async onFileSelected(event: Event) {
@@ -210,14 +221,32 @@ export class TableComponent implements OnInit {
 
   shouldBeInput(headerTitle: string) {
     return ![
+      'chef',
+      'dishes',
+      'restaurants',
       'restaurants_names',
       '_id',
       'dishes_names',
       'restaurant_name',
       'chef_name',
+      'description',
+      'ingredients',
+      'tags',
+      'restaurant',
+      'price',
+      'ranking'
     ].includes(headerTitle.toLowerCase());
   }
+  shouldShowMultiSelectDropdown(headerTitle: string) {
+    return ['restaurants', 'dishes'].includes(headerTitle.toLowerCase());
+  }
+  shouldShowOneSelectDropdown(headerTitle: string) {
+    return ['chef', 'restaurant', 'tags', 'ranking'].includes(headerTitle.toLowerCase());
+  }
+  shoudlBePresented(headerTitle: string){
+    return ['description', 'ingredients'].includes(headerTitle.toLowerCase());
 
+  }
   handleRequestDropdownOptions(headerTitle: string) {
     let options: IDropdownOption[] = [];
     if (this.headerTitles.includes('restaurants')) {

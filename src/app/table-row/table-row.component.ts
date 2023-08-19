@@ -1,6 +1,5 @@
 import {
   Component,
-  Directive,
   EventEmitter,
   Input,
   OnInit,
@@ -8,7 +7,6 @@ import {
 } from '@angular/core';
 import { ITableData, IDropdownOption } from '../interfaces/table.interface';
 import { uploadService } from '../service/cloudinaryService';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: '[appTableRow]',

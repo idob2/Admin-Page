@@ -13,7 +13,9 @@
         <button (click)="displayContent('dishes')">Dishes</button>
       </div>
     </div>
-    <button class="new-entity-button" (click)="createNewEntity()">New Entity</button>
+    <button class="new-entity-button" (click)="createNewEntity()">
+      New Entity
+    </button>
   </div>
   <div class="table-container">
     <table class="styled-table">
@@ -25,12 +27,53 @@
       </thead>
       <tbody>
         <tr *ngIf="newEntity">
-          <td *ngFor="let headerTitle of headerTitles">
+          <td *ngFor="let headerTitle of headerTitles" class="new-entity-td">
             <input
               *ngIf="shouldBeInput(headerTitle) && headerTitle !== 'image'"
               [(ngModel)]="newEntity[headerTitle.toLowerCase()]"
+              class="edit-input"
             />
 
+            <select
+              *ngIf="shouldShowMultiSelectDropdown(headerTitle)"
+              multiple
+              [(ngModel)]="newEntity[headerTitle.toLowerCase()]"
+              class="edit-select"
+            >
+              <option
+                *ngFor="let option of dropdownOptions[headerTitle]"
+                [value]="option.value"
+              >
+                {{ option.label }}
+              </option>
+            </select>
+
+            <select
+              *ngIf="shouldShowOneSelectDropdown(headerTitle)"
+              [(ngModel)]="newEntity[headerTitle.toLowerCase()]"
+              class="edit-select"
+            >
+              <option
+                *ngFor="let option of dropdownOptions[headerTitle]"
+                [value]="option.value"
+              >
+                {{ option.label }}
+              </option>
+            </select>
+
+            <select *ngIf="headerTitle === 'price'" [(ngModel)]="newEntity[headerTitle.toLowerCase()]" class="edit-select">
+              <option *ngFor="let number of numbers" [value]="number">{{ number }}</option>
+            </select>
+
+            <textarea
+              *ngIf="headerTitle !== 'price' &&
+                headerTitle !== 'image' &&
+                !shouldBeInput(headerTitle) &&
+                shoudlBePresented(headerTitle)
+              "
+              [(ngModel)]="newEntity[headerTitle.toLowerCase()]"
+              class="edit-area"
+            ></textarea>
 
             <ng-container *ngIf="headerTitle === 'image'">
               <div class="image-div">
@@ -44,18 +87,25 @@
                   *ngIf="imageUrl"
                   [src]="imageUrl"
                   alt="Uploaded Image"
-                  style="max-width: 100px; max-height: 100px; border-radius: 5px;"
+                  style="
+                    max-width: 100px;
+                    max-height: 100px;
+                    border-radius: 5px;
+                  "
                 />
               </div>
             </ng-container>
           </td>
+
           <td>
             <div class="save-button-container">
               <button class="save-button" (click)="saveNewEntity()">
                 <img src="./assets/icons/saveIcon.png" alt="Save" />
               </button>
+              <button class="cancel-entity-button"(click)="cancelEntity()">
+                <img src="./assets/icons/cancleIcon.png" alt="Delete" />
+              </button>
             </div>
-            
           </td>
         </tr>
 

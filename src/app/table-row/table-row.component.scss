@@ -27,13 +27,15 @@ tr {
   .edit-select{
     padding: 10px;
     border-radius: 5px;
-    // background-color: rgb(99, 99, 99);
     option{
       margin-bottom: 3px;
     }
-    // width: 100%;
   }
-
+  .edit-area {
+  resize: vertical;
+  padding: 5px;
+  border-radius: 5px;
+  }
   ::ng-deep .edit-select.edit-select option:checked {
     background-color: lightblue;
     padding: 4px; 
@@ -50,8 +52,7 @@ tr {
   
   label[for="fileInput"] {
     display: inline-block;
-    // width:55%;
-    font-size: 0.8rem;
+    font-size: 1rem;
     padding: 5px;
     margin-bottom: 5px;
     background-color: #767575;

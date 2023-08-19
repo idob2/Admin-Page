@@ -50,7 +50,7 @@ body {
   background-color: #343a40;
 }
 
-.styled-table tbody tr:last-of-type  {
+.styled-table tbody tr:last-of-type {
   border-bottom: 0;
 }
 .styled-table tbody tr:last-of-type {
@@ -95,7 +95,7 @@ body {
 .page-container {
   display: flex;
   background-color: #2b3035;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   flex-direction: column;
   align-items: center;
   padding: 20px;
@@ -125,11 +125,13 @@ body {
     }
   }
 }
-.save-button-container{
+.save-button-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  .save-button {
+  gap: 20px;
+  .save-button,
+  .cancel-entity-button {
     margin-left: 8px;
     background-color: transparent;
     border-color: transparent;
@@ -139,7 +141,6 @@ body {
       width: 20px;
       height: 20px;
       background-color: transparent;
-  
     }
   }
 }
@@ -150,16 +151,35 @@ body {
 
 label[for="fileInput"] {
   display: inline-block;
-  width: 55%;
   font-size: 1rem;
-  padding: 3px 3px;
+  padding: 5px;
   background-color: #767575;
   color: white;
   border-radius: 5px;
   text-align: center;
   cursor: pointer;
 }
-
+.new-entity-td {
+  text-align: center;
+  .edit-select {
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    option {
+      margin-bottom: 3px;
+    }
+  }
+  .edit-input {
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+  }
+  .edit-area {
+    resize: vertical;
+    padding: 5px;
+    border-radius: 5px;
+  }
+}
 .image-div {
   display: flex;
   flex-direction: column;
@@ -182,14 +202,13 @@ label[for="fileInput"] {
   align-items: center;
   padding: 10px;
   margin-top: 50px;
-  gap:20px;
+  gap: 20px;
 }
 
 .dropdown {
   position: relative;
   display: inline-block;
   margin-right: 10px;
-
 }
 
 .dropbtn {
@@ -202,7 +221,7 @@ label[for="fileInput"] {
   font-size: 16px;
 }
 .dropbtn::after {
-  content: '\25BE'; 
+  content: "\25BE";
   font-size: 14px;
   margin-left: 12px;
 }
@@ -241,5 +260,3 @@ label[for="fileInput"] {
   border: none;
   cursor: pointer;
 }
-
-
