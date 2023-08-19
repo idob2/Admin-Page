@@ -1,22 +1,116 @@
 <ng-container *ngIf="!deleted">
-  <td *ngFor="let headerTitle of headerTitles">
-    <span *ngIf="!editMode || headerTitle === '_id' ">{{ rowData[headerTitle.toLowerCase()] }}</span>
-    <input *ngIf="editMode && headerTitle !== 'image' && headerTitle !== '_id'" [(ngModel)]="rowData[headerTitle.toLowerCase()]" />
-    <ng-container *ngIf="editMode && headerTitle === 'image'"> 
-        <input type="file" (change)="onFileSelected($event)" />
-        <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" style="max-width: 100px; max-height: 100px;"/>
-    </ng-container>
+  <td *ngFor="let headerTitle of headerTitles"  class="table-cell">
+    <select 
+      *ngIf="editMode && shouldShowMultiSelectDropdown(headerTitle)"
+      multiple
+      [(ngModel)]="rowData[headerTitle.toLowerCase()]"
+      class="edit-select"
+    >
+      <option
+        *ngFor="let option of dropdownOptions[headerTitle]"
+        [value]="option.value"
+      >
+        {{ option.label }}
+      </option>
+    </select>
 
+    <select
+      *ngIf="editMode && shouldShowOneSelectDropdown(headerTitle)"
+      [(ngModel)]="rowData[headerTitle.toLowerCase()]"
+      class="edit-select"
+    >
+      <option
+        *ngFor="let option of dropdownOptions[headerTitle]"
+        [value]="option.value"
+        
+      >
+        {{ option.label }}
+      </option>
+    </select>
+
+    <span
+      class="ellipsis-clickable"
+      [ngClass]="{ expanded: isExpanded }"
+      (click)="expand()"
+      *ngIf="
+       (!editMode ||
+        (!shouldBeInput(headerTitle) &&
+          !shouldShowOneSelectDropdown(headerTitle) &&
+          !shouldShowMultiSelectDropdown(headerTitle))) && headerTitle !== 'image'
+      "
+      >{{ rowData[headerTitle.toLowerCase()] }}</span
+    >
+    <img
+          *ngIf="!editMode && headerTitle === 'image'"
+          [src]="imageUrl"
+          alt="Uploaded Image"
+          style="max-width: 100px; max-height: 100px"
+        />
+    <!-- <img
+    class="ellipsis-clickable"
+    [ngClass]="{ expanded: isExpanded }"
+    (click)="expand()"
+    *ngIf="
+      !editMode && headerTitle === 'image'
+    "
+    /> -->
+  
+    <textarea
+      *ngIf="
+        editMode && headerTitle !== 'price' && headerTitle !== 'ranking' &&
+        headerTitle !== 'image' && headerTitle !== 'name' &&
+          shouldBeInput(headerTitle) &&
+          !shouldShowOneSelectDropdown(headerTitle) &&
+          !shouldShowMultiSelectDropdown(headerTitle)
+      "
+      [(ngModel)]="rowData[headerTitle.toLowerCase()]"
+    ></textarea>
+    <select *ngIf="editMode && headerTitle === 'price'" [(ngModel)]="rowData[headerTitle.toLowerCase()]" class="edit-select">
+      <option *ngFor="let number of numbers" [value]="number">{{ number }}</option>
+    </select>
+  
+    <input
+      *ngIf="
+        editMode &&
+        headerTitle === 'name'"
+      [(ngModel)]="rowData[headerTitle.toLowerCase()]"
+      class="edit-input"
+    />
+    <ng-container *ngIf="editMode && headerTitle === 'image'">
+      <div class="image-div">
+        <label for="fileInput">Choose File</label>
+        <input id="fileInput" type="file" (change)="onFileSelected($event)"  class="edit-input"/>
+        <img
+          *ngIf="imageUrl"
+          [src]="imageUrl"
+          alt="Uploaded Image"
+          style="max-width: 100px; max-height: 100px; border-radius: 5px;"
+        />
+      </div>
+    </ng-container>
   </td>
-  <td *ngIf="!editMode">
-    <div *ngIf="!showConfirmation" class="options-container">
-      <button (click)="edit()"><img src="../../assets/icons/editIcon.png" alt="Edit"></button>
-      <button (click)="delete()"><img src="../../assets/icons/trashCanIcon.png" alt="Delete"></button>
+  <td *ngIf="!editMode " class="table-cell">
+    <div *ngIf="!showConfirmation && !isEditing" class="options-container">
+      <button (click)="edit()">
+        <img src="./assets/icons/editIcon.png" alt="Edit" />
+      </button>
+      <button (click)="delete()">
+        <img src="./assets/icons/trashCanIcon.png" alt="Delete" />
+      </button>
     </div>
     <div *ngIf="showConfirmation" class="delete-options-container">
       <button (click)="confirmDelete()">Yes</button>
       <button (click)="cancelDelete()">No</button>
     </div>
   </td>
-  <td *ngIf="editMode"><button (click)="save()"><img src="../../assets/icons/saveIcon.png" alt="Save"></button></td>
+  <td *ngIf="editMode" class="table-cell">
+    <div class="options-container">
+    <button (click)="save()">
+      <img src="./assets/icons/saveIcon.png" alt="Save" />
+    </button>
+    <button (click)="cancelEdit()">
+      <img src="./assets/icons/cancleIcon.png" alt="Cancel" />
+    </button>
+  </div>
+  </td>
 </ng-container>

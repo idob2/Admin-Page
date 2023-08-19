@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../service/dataService';
 import { IChef } from '../interfaces/chef.interface';
-import { ITableData } from '../interfaces/table.interface';
+import { ITableData, IDropdownOption } from '../interfaces/table.interface';
 import { IRestaurant } from '../interfaces/restaurants.interface';
 import { IDish } from '../interfaces/dish.interface';
 import { getErrorMessage } from '../utils/error.utils';
@@ -26,28 +26,38 @@ export class TableComponent implements OnInit {
   selectedContent: string = '';
   imageUrl: string | null = null;
   selectedFile: File | null = null;
+  isEditing: boolean = false;
+  dropdownOptions: { [headerTitle: string]: IDropdownOption[] } = {};
 
-  constructor(private dataService: DataService, private authService: AuthService, private router: Router) {}
+  constructor(
+    private dataService: DataService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   async ngOnInit(): Promise<void> {
     try {
-      const [chefsData, restaurantsData, dishesData] = await Promise.all([
-        this.dataService.fetchChefData(),
-        this.dataService.fetchRestaurantData(),
-        this.dataService.fetchDishData(),
-      ]);
-      this.chefs = chefsData;
-      this.restaurants = restaurantsData;
-      this.dishes = dishesData;
+      await this.fetchAllData();
       this.displayContent('chefs');
     } catch (error) {
       console.error({ message: getErrorMessage(error) });
     }
   }
+  async fetchAllData() {
+    const [chefsData, restaurantsData, dishesData] = await Promise.all([
+      this.dataService.fetchChefData(),
+      this.dataService.fetchRestaurantData(),
+      this.dataService.fetchDishData(),
+    ]);
+    this.chefs = chefsData;
+    this.restaurants = restaurantsData;
+    this.dishes = dishesData;
+  }
 
   displayContent(collection: string) {
     this.responseData = {};
     this.newEntity = null;
+    this.isEditing = false;
     switch (collection) {
       case 'chefs':
         this.chefs.forEach((chef) => {
@@ -94,7 +104,7 @@ export class TableComponent implements OnInit {
   getValue(
     row: ITableData,
     key: string
-  ): string[] | string | ObjectId | ObjectId[] | null {
+  ): string[] | string | ObjectId | ObjectId[] | number | null {
     return row[key.toLowerCase()];
   }
 
@@ -104,11 +114,15 @@ export class TableComponent implements OnInit {
 
   async handleDataSaved(data: { data: ITableData; id: string }) {
     try {
+      console.log(data);
       const respone = await this.dataService.updateData(
         this.selectedContent,
         data.id,
         data.data
       );
+        await this.fetchAllData();
+        alert("Uploaded the data");
+        this.displayContent(this.selectedContent);
     } catch (error) {
       this.router.navigate(['/login-page']);
       console.error({ message: getErrorMessage(error) });
@@ -118,12 +132,16 @@ export class TableComponent implements OnInit {
   async handleDataDeleted(id: { id: string }) {
     try {
       await this.dataService.deleteData(this.selectedContent, id.id);
+      await this.fetchAllData();
+      this.displayContent(this.selectedContent);
     } catch (error) {
       this.router.navigate(['/login-page']);
       console.error({ message: getErrorMessage(error) });
     }
   }
-
+  editModeToggled(editCond:boolean){
+    this.isEditing = editCond;
+  }
   createNewEntity(): void {
     try {
       if (this.selectedContent === '') {
@@ -154,8 +172,13 @@ export class TableComponent implements OnInit {
         await this.dataService.postData(this.selectedContent, this.newEntity);
         this.newEntity = {};
       }
+      await this.fetchAllData();
+      this.displayContent(this.selectedContent);
     } catch (error) {
-      this.router.navigate(['/login-page']);
+      if(getErrorMessage(error) === 'Invalid token'){
+        this.router.navigate(['/login-page']);
+      }
+      alert('Fill the fields  correctly!');
       console.error({ message: getErrorMessage(error) });
     }
   }
@@ -164,6 +187,7 @@ export class TableComponent implements OnInit {
     const fileInput = event.target as HTMLInputElement;
     if (fileInput.files && fileInput.files.length > 0) {
       this.selectedFile = fileInput.files[0];
+      this.imageUrl = URL.createObjectURL(this.selectedFile); 
     }
   }
 
@@ -182,5 +206,66 @@ export class TableComponent implements OnInit {
   logout(): void {
     this.authService.deleteCookie();
     this.router.navigate(['/login-page']);
+  }
+
+  shouldBeInput(headerTitle: string) {
+    return ![
+      'restaurants_names',
+      '_id',
+      'dishes_names',
+      'restaurant_name',
+      'chef_name',
+    ].includes(headerTitle.toLowerCase());
+  }
+
+  handleRequestDropdownOptions(headerTitle: string) {
+    let options: IDropdownOption[] = [];
+    if (this.headerTitles.includes('restaurants')) {
+      options = this.restaurants.map((restaurant) => ({
+        label: restaurant.name,
+        value: restaurant._id,
+      }));
+      this.dropdownOptions['restaurants'] = options;
+    }
+    if (this.headerTitles.includes('restaurant')) {
+      options = this.restaurants.map((restaurant) => ({
+        label: restaurant.name,
+        value: restaurant._id,
+      }));
+      this.dropdownOptions['restaurant'] = options;
+    }
+    if (this.headerTitles.includes('chef')) {
+      options = this.chefs.map((chef) => ({
+        label: chef.name,
+        value: chef._id,
+      }));
+      this.dropdownOptions['chef'] = options;
+    }
+    if (this.headerTitles.includes('dishes')) {
+      options = this.dishes.map((dish) => ({
+        label: dish.name,
+        value: dish._id,
+      }));
+      this.dropdownOptions['dishes'] = options;
+    }
+    if (this.headerTitles.includes('tags')) {
+      options = [
+        { label: 'spicy', value: 'spicy' },
+        { label: 'vegeterian', value: 'vegeterian' },
+        { label: 'vegan', value: 'vegan' },
+        { label: 'none', value: 'none' },
+      ];
+      this.dropdownOptions['tags'] = options;
+    }
+    if(this.headerTitles.includes('ranking')) {
+      options = [
+        { label: 'One Star', value: 'one-star' },
+        { label: 'Two Stars', value: 'two-stars' },
+        { label: 'Three Stars', value: 'three-stars' },
+        { label: 'Four Stars', value: 'four-stars' },
+        { label: 'Five Stars', value: 'five-stars' },
+      ];
+      this.dropdownOptions['ranking'] = options;
+    }
   }
 }

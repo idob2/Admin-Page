@@ -7,7 +7,8 @@ import axios from 'axios';
   providedIn: 'root',
 })
 export class AuthService {
-  private API_BASE_URL = 'http://ec2-18-117-229-138.us-east-2.compute.amazonaws.com:3000/api/v1';
+  // private API_BASE_URL = 'http://ec2-3-137-173-135.us-east-2.compute.amazonaws.com:3000/api/v1';
+  private API_BASE_URL = 'http://localhost:3000/api/v1';
 
   constructor(
     private cookieService: CookieService

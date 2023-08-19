@@ -10,21 +10,81 @@ tr {
     max-width: 185px;
     max-height: 200px;
     width: 100%;
-    border: 1px solid black;
-    padding: 8px;
+    padding: 12px;
     text-align: center;
     word-wrap: break-word;
 
   }
-  
-  .options-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap:20px;
+  .rankingImage{
+    width: 50px;
+    height: 50px;
   }
-  span{
+  input{
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+  }
+  .edit-select{
+    padding: 10px;
+    border-radius: 5px;
+    // background-color: rgb(99, 99, 99);
+    option{
+      margin-bottom: 3px;
+    }
+    // width: 100%;
+  }
+
+  ::ng-deep .edit-select.edit-select option:checked {
+    background-color: lightblue;
+    padding: 4px; 
+
+  }
+
+  option{
+    text-align: center;
+    color: black;
+  }
+  #fileInput {
+    display: none;
+  }
+  
+  label[for="fileInput"] {
+    display: inline-block;
+    // width:55%;
+    font-size: 0.8rem;
+    padding: 5px;
+    margin-bottom: 5px;
+    background-color: #767575;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+.image-div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px
+
+}
+.delete-options-container{
+  button{
+    color: white;
+    font-size: 13px;
+  }
+}
+.options-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap:20px;
+  img{
+    filter: invert(100%);
+  }
+}
+  .ellipsis-clickable {
     word-wrap: break-word;
     max-height: 3.6em; 
     line-height: 1.2em;
@@ -33,8 +93,13 @@ tr {
     display: -webkit-box;
     -webkit-line-clamp: 2; 
     -webkit-box-orient: vertical;
+    cursor: pointer; 
   }
 
+  .ellipsis-clickable.expanded {
+    max-height: none;
+    -webkit-line-clamp: initial;
+  }
   input{
     width: auto;
   }
@@ -50,5 +115,6 @@ tr {
         background-color: transparent;
     }
   }
+
 
 

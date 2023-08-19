@@ -1,24 +1,22 @@
-<div class="page-container">
-  <div class="logut-button">
+<div class="page-container table-container">
+  <div class="logout-button">
     <button (click)="logout()">logout</button>
   </div>
-  <div class="buttons-container">
-    <div><button (click)="displayContent('chefs')">Chefs</button></div>
-    <div>
-      <button (click)="displayContent('restaurants')">Restaurants</button>
+  <h1 class="title">{{ selectedContent }}</h1>
+
+  <div class="table-menu">
+    <div class="dropdown">
+      <button class="dropbtn">{{ selectedContent }}</button>
+      <div class="dropdown-content">
+        <button (click)="displayContent('chefs')">Chefs</button>
+        <button (click)="displayContent('restaurants')">Restaurants</button>
+        <button (click)="displayContent('dishes')">Dishes</button>
+      </div>
     </div>
-    <div>
-      <button (click)="displayContent('dishes')">Dishes</button>
-    </div>
-    <div>
-      <button (click)="createNewEntity()">New Entity</button>
-    </div>
+    <button class="new-entity-button" (click)="createNewEntity()">New Entity</button>
   </div>
-
-  <h2>{{ selectedContent }}</h2>
-
   <div class="table-container">
-    <table>
+    <table class="styled-table">
       <thead>
         <tr>
           <th *ngFor="let headerTitle of headerTitles">{{ headerTitle }}</th>
@@ -29,22 +27,38 @@
         <tr *ngIf="newEntity">
           <td *ngFor="let headerTitle of headerTitles">
             <input
-              *ngIf="
-                headerTitle.toLowerCase() !== '_id' && headerTitle !== 'image'
-              "
+              *ngIf="shouldBeInput(headerTitle) && headerTitle !== 'image'"
               [(ngModel)]="newEntity[headerTitle.toLowerCase()]"
             />
+
+
             <ng-container *ngIf="headerTitle === 'image'">
-              <input type="file" (change)="onFileSelected($event)" />
-              <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" />
+              <div class="image-div">
+                <label for="fileInput">Choose File</label>
+                <input
+                  id="fileInput"
+                  type="file"
+                  (change)="onFileSelected($event)"
+                />
+                <img
+                  *ngIf="imageUrl"
+                  [src]="imageUrl"
+                  alt="Uploaded Image"
+                  style="max-width: 100px; max-height: 100px; border-radius: 5px;"
+                />
+              </div>
             </ng-container>
           </td>
           <td>
-            <button class="save-button" (click)="saveNewEntity()">
-              <img src="../../assets/icons/saveIcon.png" alt="Save" />
-            </button>
+            <div class="save-button-container">
+              <button class="save-button" (click)="saveNewEntity()">
+                <img src="./assets/icons/saveIcon.png" alt="Save" />
+              </button>
+            </div>
+            
           </td>
         </tr>
+
         <ng-container *ngFor="let idValuePair of responseData | keyvalue">
           <ng-container *ngFor="let row of idValuePair.value" ngProjectAs="tr">
             <tr
@@ -52,9 +66,15 @@
               [rowData]="row"
               [rowKey]="idValuePair.key"
               [headerTitles]="headerTitles"
+              [dropdownOptions]="dropdownOptions"
+              [isEditing]="isEditing"
               (dataSaved)="handleDataSaved($event)"
               (dataDeleted)="handleDataDeleted($event)"
-            ></tr>
+              (requestDropdownOptions)="handleRequestDropdownOptions($event)"
+              (editModeToggled)="editModeToggled($event)"
+            >
+              >
+            </tr>
           </ng-container>
         </ng-container>
       </tbody>

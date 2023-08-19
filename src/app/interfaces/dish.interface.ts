@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 export interface IDish{
     _id: string;
     name: string;
-    price: string;
+    price: number;
     image: string;
     ingredients: string;
     tags: string;

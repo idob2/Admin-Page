@@ -4,5 +4,10 @@ import { IRestaurant } from "./restaurants.interface";
 import { IChef } from "./chef.interface";
 
 export interface ITableData {
-    [key: string]: string[] | string | ObjectId | ObjectId[] | null;
+    [key: string]: string[] | string | ObjectId | ObjectId[] | number | null;
   }
+
+export interface IDropdownOption {
+  label: string;
+  value: string; 
+}
