@@ -35,14 +35,12 @@ export class TableRowComponent implements OnInit {
   showConfirmation: boolean = false;
   deleted: boolean = false;
   isExpanded: boolean = false;
-  numbers: number[] = [];
+  expandedStates: Map<string, boolean> = new Map();
+  showTooltip = false;
 
   ngOnInit(): void {
     this.imageUrl = String(this.rowData['image']);
     this.rowDataHolder = this.deepCopy(this.rowData);
-    for (let i = 0; i <= 500; i++) {
-      this.numbers.push(i);
-    };
   }
 
   edit(): void {
@@ -85,6 +83,7 @@ export class TableRowComponent implements OnInit {
     const fileInput = event.target as HTMLInputElement;
     if (fileInput.files && fileInput.files.length > 0) {
       this.selectedFile = fileInput.files[0];
+      this.imageUrl = URL.createObjectURL(this.selectedFile);
     }
   }
 
@@ -114,10 +113,23 @@ export class TableRowComponent implements OnInit {
   shouldShowOneSelectDropdown(headerTitle: string) {
     return ['chef', 'restaurant', 'tags', 'ranking'].includes(headerTitle.toLowerCase());
   }
-  expand() {
-    this.isExpanded = !this.isExpanded;
+  expand(element: EventTarget | null, identifier: string) {
+    if (element instanceof HTMLElement) {
+      const currentHeight = element.clientHeight;
+      const scrollHeight = element.scrollHeight;
+  
+      const isCurrentlyExpanded = this.expandedStates.get(identifier) || false;
+  
+      if ((scrollHeight > currentHeight && !isCurrentlyExpanded) || isCurrentlyExpanded) {
+        this.expandedStates.set(identifier, !isCurrentlyExpanded);
+      }
+    }
   }
-
+  
+  
+  isElementExpanded(identifier: string): boolean {
+    return this.expandedStates.get(identifier) || false;
+  }
   deepCopy(obj: any): any {
     if (typeof obj !== 'object' || obj === null) {
       return obj;

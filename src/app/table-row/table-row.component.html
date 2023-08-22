@@ -1,28 +1,34 @@
 <ng-container *ngIf="!deleted">
-  <td *ngFor="let headerTitle of headerTitles"  class="table-cell">
-    <select 
-      *ngIf="editMode && shouldShowMultiSelectDropdown(headerTitle)"
-      multiple
-      [(ngModel)]="rowData[headerTitle.toLowerCase()]"
-      class="edit-select"
-    >
-      <option
-        *ngFor="let option of dropdownOptions[headerTitle]"
-        [value]="option.value"
+  <td *ngFor="let headerTitle of headerTitles" class="table-cell">
+    <div class="select-container">
+      <select
+        *ngIf="editMode && shouldShowMultiSelectDropdown(headerTitle)"
+        multiple
+        [(ngModel)]="rowData[headerTitle.toLowerCase()]"
+        class="edit-select"
+        (mouseover)="showTooltip = true"
+        (mouseleave)="showTooltip = false"
       >
-        {{ option.label }}
-      </option>
-    </select>
-
+        <option
+          *ngFor="let option of dropdownOptions[headerTitle]"
+          [value]="option.value"
+        >
+          {{ option.label }}
+        </option>
+      </select>
+      <div class="tooltip" *ngIf="showTooltip">
+        To select multiple options, press Command (or Ctrl on Windows) while
+        clicking.
+      </div>
+    </div>
     <select
       *ngIf="editMode && shouldShowOneSelectDropdown(headerTitle)"
       [(ngModel)]="rowData[headerTitle.toLowerCase()]"
-      class="edit-select"
+      class="edit-select select-single"
     >
       <option
         *ngFor="let option of dropdownOptions[headerTitle]"
         [value]="option.value"
-        
       >
         {{ option.label }}
       </option>
@@ -30,60 +36,78 @@
 
     <span
       class="ellipsis-clickable"
-      [ngClass]="{ expanded: isExpanded }"
-      (click)="expand()"
+      [ngClass]="{
+        expanded: isElementExpanded(
+          rowData[headerTitle.toLowerCase()] + '-' + headerTitle
+        )
+      }"
+      (click)="
+        expand(
+          $event.target,
+          rowData[headerTitle.toLowerCase()] + '-' + headerTitle
+        )
+      "
       *ngIf="
-       (!editMode ||
-        (!shouldBeInput(headerTitle) &&
-          !shouldShowOneSelectDropdown(headerTitle) &&
-          !shouldShowMultiSelectDropdown(headerTitle))) && headerTitle !== 'image'
+        (!editMode ||
+          (!shouldBeInput(headerTitle) &&
+            !shouldShowOneSelectDropdown(headerTitle) &&
+            !shouldShowMultiSelectDropdown(headerTitle))) &&
+        headerTitle !== 'image'
       "
       >{{ rowData[headerTitle.toLowerCase()] }}</span
     >
     <img
-          *ngIf="!editMode && headerTitle === 'image'"
-          [src]="imageUrl"
-          alt="Uploaded Image"
-          style="max-width: 100px; max-height: 100px"
-        />
- 
-  
+      *ngIf="!editMode && headerTitle === 'image'"
+      [src]="imageUrl"
+      alt="Uploaded Image"
+      style="max-width: 100px; max-height: 100px"
+    />
+
     <textarea
       *ngIf="
-        editMode && headerTitle !== 'price' && headerTitle !== 'ranking' &&
-        headerTitle !== 'image' && headerTitle !== 'name' &&
-          shouldBeInput(headerTitle) &&
-          !shouldShowOneSelectDropdown(headerTitle) &&
-          !shouldShowMultiSelectDropdown(headerTitle)
+        editMode &&
+        headerTitle !== 'price' &&
+        headerTitle !== 'ranking' &&
+        headerTitle !== 'image' &&
+        headerTitle !== 'name' &&
+        shouldBeInput(headerTitle) &&
+        !shouldShowOneSelectDropdown(headerTitle) &&
+        !shouldShowMultiSelectDropdown(headerTitle)
       "
       [(ngModel)]="rowData[headerTitle.toLowerCase()]"
       class="edit-area"
     ></textarea>
-    <select *ngIf="editMode && headerTitle === 'price'" [(ngModel)]="rowData[headerTitle.toLowerCase()]" class="edit-select">
-      <option *ngFor="let number of numbers" [value]="number">{{ number }}</option>
-    </select>
-  
     <input
-      *ngIf="
-        editMode &&
-        headerTitle === 'name'"
+      *ngIf="editMode && headerTitle === 'price'"
+      type="number"
+      [(ngModel)]="rowData[headerTitle.toLowerCase()]"
+      class="edit-input"
+    />
+
+    <input
+      *ngIf="editMode && headerTitle === 'name'"
       [(ngModel)]="rowData[headerTitle.toLowerCase()]"
       class="edit-input"
     />
     <ng-container *ngIf="editMode && headerTitle === 'image'">
       <div class="image-div">
         <label for="fileInput">Choose File</label>
-        <input id="fileInput" type="file" (change)="onFileSelected($event)"  class="edit-input"/>
+        <input
+          id="fileInput"
+          type="file"
+          (change)="onFileSelected($event)"
+          class="edit-input"
+        />
         <img
           *ngIf="imageUrl"
           [src]="imageUrl"
           alt="Uploaded Image"
-          style="max-width: 100px; max-height: 100px; border-radius: 5px;"
+          style="max-width: 100px; max-height: 100px; border-radius: 5px"
         />
       </div>
     </ng-container>
   </td>
-  <td *ngIf="!editMode " class="table-cell">
+  <td *ngIf="!editMode" class="table-cell">
     <div *ngIf="!showConfirmation && !isEditing" class="options-container">
       <button (click)="edit()">
         <img src="./assets/icons/editIcon.png" alt="Edit" />
@@ -99,12 +123,12 @@
   </td>
   <td *ngIf="editMode" class="table-cell">
     <div class="options-container">
-    <button (click)="save()">
-      <img src="./assets/icons/saveIcon.png" alt="Save" />
-    </button>
-    <button (click)="cancelEdit()">
-      <img src="./assets/icons/cancleIcon.png" alt="Cancel" />
-    </button>
-  </div>
+      <button (click)="save()">
+        <img src="./assets/icons/saveIcon.png" alt="Save" />
+      </button>
+      <button (click)="cancelEdit()">
+        <img src="./assets/icons/cancleIcon.png" alt="Cancel" />
+      </button>
+    </div>
   </td>
 </ng-container>

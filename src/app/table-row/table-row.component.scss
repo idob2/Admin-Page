@@ -7,13 +7,11 @@ tr {
   
   td {
     flex: 1;
-    max-width: 185px;
+    max-width: 200px;
     max-height: 200px;
-    width: 100%;
-    padding: 12px;
+    padding: 12px 15px;
     text-align: center;
     word-wrap: break-word;
-
   }
   .rankingImage{
     width: 50px;
@@ -25,9 +23,9 @@ tr {
     text-align: center;
   }
   .edit-select{
-    padding: 10px;
     border-radius: 5px;
     option{
+      padding: 5px;
       margin-bottom: 3px;
     }
   }
@@ -46,27 +44,13 @@ tr {
     text-align: center;
     color: black;
   }
-  #fileInput {
-    display: none;
-  }
-  
-  label[for="fileInput"] {
-    display: inline-block;
-    font-size: 1rem;
-    padding: 5px;
-    margin-bottom: 5px;
-    background-color: #767575;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-  }
 
 .image-div{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 2px
+  gap: 5px
 
 }
 .delete-options-container{
@@ -94,13 +78,20 @@ tr {
     display: -webkit-box;
     -webkit-line-clamp: 2; 
     -webkit-box-orient: vertical;
+    
     cursor: pointer; 
   }
-
+ 
   .ellipsis-clickable.expanded {
     max-height: none;
     -webkit-line-clamp: initial;
-  }
+    max-width: 200px;
+    width: 100vw;
+    display: flex;
+    letter-spacing: 0.4px;
+    justify-content: center;
+    flex-direction: column;
+  } 
   input{
     width: auto;
   }

@@ -6,14 +6,14 @@ body {
 }
 .title {
   text-transform: uppercase;
+  font-family: "Trebuchet MS";
   color: white;
 }
 .styled-table {
   border-collapse: collapse;
   margin: 25px 0;
   font-size: 14px;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
+  font-family: "Trebuchet MS";
   min-width: 400px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
@@ -21,7 +21,6 @@ body {
 .styled-table thead tr {
   background-color: #343a40;
   border-bottom: 4px solid #2b3035;
-
   color: #ffffff;
   text-align: left;
   text-align: center;
@@ -36,20 +35,16 @@ body {
 .styled-table th:first-of-type {
   border-top-left-radius: 5px;
 }
-
 .styled-table tbody tr {
   border-bottom: 4px solid #2b3035;
   color: white;
 }
-
 .styled-table tbody tr:hover {
   background-color: rgb(33, 36, 40);
 }
-
 .styled-table tbody tr {
   background-color: #343a40;
 }
-
 .styled-table tbody tr:last-of-type {
   border-bottom: 0;
 }
@@ -57,7 +52,6 @@ body {
   box-shadow: 0px 10px 0px 0px #343a40;
   border-radius: 5px;
 }
-
 .logout-button {
   border: none;
   background-color: rgb(158, 1, 1);
@@ -125,47 +119,18 @@ body {
     }
   }
 }
-.save-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  .save-button,
-  .cancel-entity-button {
-    margin-left: 8px;
-    background-color: transparent;
-    border-color: transparent;
-    filter: invert(100%);
-    cursor: pointer;
-    img {
-      width: 20px;
-      height: 20px;
-      background-color: transparent;
-    }
-  }
-}
 
-#fileInput {
-  display: none;
-}
 
-label[for="fileInput"] {
-  display: inline-block;
-  font-size: 1rem;
-  padding: 5px;
-  background-color: #767575;
-  color: white;
-  border-radius: 5px;
-  text-align: center;
-  cursor: pointer;
-}
 .new-entity-td {
   text-align: center;
   .edit-select {
-    padding: 10px;
     border-radius: 5px;
+    padding: 5px;
     text-align: center;
+    min-height: 10px;
+    min-width: 100px;
     option {
+      padding: 5px;
       margin-bottom: 3px;
     }
   }
@@ -185,16 +150,14 @@ label[for="fileInput"] {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 2px;
+  gap: 5px;
 }
-
 .top-bar {
   width: 100%;
   display: flex;
   justify-content: flex-end;
   padding: 20px;
 }
-
 .table-menu {
   position: relative;
   display: flex;
@@ -204,13 +167,11 @@ label[for="fileInput"] {
   margin-top: 50px;
   gap: 20px;
 }
-
 .dropdown {
   position: relative;
   display: inline-block;
   margin-right: 10px;
 }
-
 .dropbtn {
   background-color: #4caf50;
   color: white;
@@ -225,7 +186,6 @@ label[for="fileInput"] {
   font-size: 14px;
   margin-left: 12px;
 }
-
 .dropdown-content {
   display: none;
   position: absolute;
@@ -233,7 +193,6 @@ label[for="fileInput"] {
   min-width: 160px;
   z-index: 1;
 }
-
 .dropdown-content button {
   display: block;
   width: 100%;
@@ -246,11 +205,9 @@ label[for="fileInput"] {
 .dropdown-content button:hover {
   background-color: lightblue;
 }
-
 .dropdown:hover .dropdown-content {
   display: block;
 }
-
 .new-entity-button {
   background-color: #4caf50;
   color: white;
@@ -259,4 +216,32 @@ label[for="fileInput"] {
   font-size: 16px;
   border: none;
   cursor: pointer;
+}
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+}
+.spinner {
+  border: 8px solid rgba(255, 255, 255, 0.3); 
+  border-radius: 50%;
+  border-top: 8px solid #fff; 
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
 }

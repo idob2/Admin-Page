@@ -3,3 +3,76 @@ body{
     // overflow-x: hidden;
     margin: 0;
 }
+
+#fileInput {
+    display: none;
+  }
+  label[for="fileInput"] {
+    display: inline-block;
+    font-size: 1rem;
+    padding: 5px;
+    background-color: #767575;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .edit-select {
+    min-height: 10px;
+    min-width: 100px;
+  }
+  .select-single{
+    padding: 5px 10px;
+  }
+
+  textarea{max-height: 200px;}
+
+  .save-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    .save-button,
+    .cancel-entity-button {
+      margin-left: 8px;
+      background-color: transparent;
+      border-color: transparent;
+      filter: invert(100%);
+      cursor: pointer;
+      img {
+        width: 20px;
+        height: 20px;
+        background-color: transparent;
+      }
+    }
+  }
+
+  .select-container {
+    display: inline-block;
+    position: relative; 
+  }
+  .tooltip {
+    display: none;
+    position: absolute;
+    top: 100%; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    z-index: 100; 
+  }
+  
+  .select-container:hover .tooltip {
+    display: block;
+  }
+
+  .select-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

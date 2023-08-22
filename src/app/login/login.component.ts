@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
       await this.authService.loginUser(this.userName, this.password);
       this.router.navigate(['/admin-table']);
     } catch (error) {
+      alert("User Name or Password is not correct");
       console.error({ message: getErrorMessage(error) });
     }
   }

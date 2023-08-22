@@ -1,12 +1,12 @@
 <div class="page-container table-container">
   <div class="logout-button">
-    <button (click)="logout()">logout</button>
+    <button (click)="logout()">Logout</button>
   </div>
   <h1 class="title">{{ selectedContent }}</h1>
 
   <div class="table-menu">
     <div class="dropdown">
-      <button class="dropbtn">{{ selectedContent }}</button>
+      <button class="dropbtn">{{ transformString(selectedContent) }}</button>
       <div class="dropdown-content">
         <button (click)="displayContent('chefs')">Chefs</button>
         <button (click)="displayContent('restaurants')">Restaurants</button>
@@ -21,7 +21,9 @@
     <table class="styled-table">
       <thead>
         <tr>
-          <th *ngFor="let headerTitle of headerTitles">{{ headerTitle }}</th>
+          <th *ngFor="let headerTitle of headerTitles">
+            {{ transformString(headerTitle) }}
+          </th>
           <th></th>
         </tr>
       </thead>
@@ -34,24 +36,31 @@
               class="edit-input"
             />
 
-            <select
-              *ngIf="shouldShowMultiSelectDropdown(headerTitle)"
-              multiple
-              [(ngModel)]="newEntity[headerTitle.toLowerCase()]"
-              class="edit-select"
-            >
-              <option
-                *ngFor="let option of dropdownOptions[headerTitle]"
-                [value]="option.value"
+            <div class="select-container">
+              <select
+                  *ngIf="shouldShowMultiSelectDropdown(headerTitle)"
+                  multiple
+                  [(ngModel)]="newEntity[headerTitle.toLowerCase()]"
+                  class="edit-select"
+                  (mouseover)="showTooltip = true"
+                  (mouseleave)="showTooltip = false"
               >
-                {{ option.label }}
-              </option>
-            </select>
-
+                  <option
+                      *ngFor="let option of dropdownOptions[headerTitle]"
+                      [value]="option.value"
+                  >
+                      {{ option.label }}
+                  </option>
+              </select>
+              
+              <div class="tooltip" *ngIf="showTooltip">
+                  To select multiple options, press Command (or Ctrl on Windows) while clicking.
+              </div>
+          </div>
             <select
               *ngIf="shouldShowOneSelectDropdown(headerTitle)"
               [(ngModel)]="newEntity[headerTitle.toLowerCase()]"
-              class="edit-select"
+              class="edit-select select-single"
             >
               <option
                 *ngFor="let option of dropdownOptions[headerTitle]"
@@ -60,13 +69,11 @@
                 {{ option.label }}
               </option>
             </select>
-
-            <select *ngIf="headerTitle === 'price'" [(ngModel)]="newEntity[headerTitle.toLowerCase()]" class="edit-select">
-              <option *ngFor="let number of numbers" [value]="number">{{ number }}</option>
-            </select>
+            <input *ngIf="headerTitle === 'price'" type="number" [(ngModel)]="newEntity[headerTitle.toLowerCase()]" class="edit-input">
 
             <textarea
-              *ngIf="headerTitle !== 'price' &&
+              *ngIf="
+                headerTitle !== 'price' &&
                 headerTitle !== 'image' &&
                 !shouldBeInput(headerTitle) &&
                 shoudlBePresented(headerTitle)
@@ -102,7 +109,7 @@
               <button class="save-button" (click)="saveNewEntity()">
                 <img src="./assets/icons/saveIcon.png" alt="Save" />
               </button>
-              <button class="cancel-entity-button"(click)="cancelEntity()">
+              <button class="cancel-entity-button" (click)="cancelEntity()">
                 <img src="./assets/icons/cancleIcon.png" alt="Delete" />
               </button>
             </div>
@@ -123,11 +130,13 @@
               (requestDropdownOptions)="handleRequestDropdownOptions($event)"
               (editModeToggled)="editModeToggled($event)"
             >
-              >
             </tr>
           </ng-container>
         </ng-container>
       </tbody>
     </table>
+    <div *ngIf="isLoading" class="spinner-overlay">
+      <div class="spinner"></div>
+    </div>
   </div>
 </div>

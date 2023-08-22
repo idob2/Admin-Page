@@ -26,7 +26,7 @@ const appRoutes: Routes = [
     BrowserModule,
     FormsModule,
     CloudinaryModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
   ],
   exports: [RouterModule],
   providers: [{ provide: APP_BASE_HREF, useValue: '/admin' }],
